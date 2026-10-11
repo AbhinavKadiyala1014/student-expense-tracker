@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SpendWise is a student expense tracker for budgets, spending, and savings.">
+    <title>SpendWise | Student Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a href="#" class="brand">Spend<span>Wise</span></a>
+        <div class="topbar-right">
+            <span class="status-dot"></span>
+            Student Finance Dashboard
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">PERSONAL FINANCE MANAGER</p>
+                <h1>Student Expense Tracker</h1>
+                <p class="muted">Know where your money goes. Make every rupee count.</p>
+            </div>
+
+            <div class="budget-box">
+                <label for="budget">Monthly budget (₹)</label>
+                <input id="budget" type="number" min="0" step="0.01"
+                       placeholder="Enter your budget">
+                <button id="save-budget" class="primary-btn" type="button">
+                    Save budget
+                </button>
+                <p id="budget-message" class="small-message" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section class="summary-grid">
+            <article class="summary-card purple">
+                <div class="card-top">
+                    <span>Total expenses</span>
+                    <span class="card-icon">₹</span>
+                </div>
+                <h2 id="total">₹0.00</h2>
+                <p>This month</p>
+            </article>
+
+            <article class="summary-card green">
+                <div class="card-top">
+                    <span>Remaining budget</span>
+                    <span class="card-icon">↗</span>
+                </div>
+                <h2 id="remaining">Not set</h2>
+                <p id="remaining-note">Set a budget to get started</p>
+            </article>
+
+            <article class="summary-card orange">
+                <div class="card-top">
+                    <span>Transactions</span>
+                    <span class="card-icon">≡</span>
+                </div>
+                <h2 id="count">0</h2>
+                <p>This month</p>
+            </article>
+        </section>
+
+        <section class="budget-progress panel">
+            <div class="progress-heading">
+                <div>
+                    <h2>Monthly budget usage</h2>
+                    <p class="muted">Track your spending against your limit.</p>
+                </div>
+                <strong id="budget-percent">Set budget</strong>
+            </div>
+            <div class="progress-track">
+                <div id="budget-progress" class="progress-fill"></div>
+            </div>
+            <div class="progress-labels">
+                <span id="spent-label">Spent: ₹0.00</span>
+                <span id="limit-label">Budget: Not set</span>
+            </div>
+        </section>
+
+        <section class="main-grid">
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Add an expense</h2>
+                        <p class="muted">Record a purchase or payment.</p>
+                    </div>
+                    <span class="heading-icon">＋</span>
+                </div>
+
+                <form id="expense-form">
+                    <div class="field">
+                        <label for="title">Expense name</label>
+                        <input id="title" type="text" maxlength="80"
+                               placeholder="e.g. College bus pass" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="amount">Amount (₹)</label>
+                        <input id="amount" type="number" min="0.01"
+                               max="1000000000" step="0.01"
+                               placeholder="e.g. 150" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="Food">🍔 Food</option>
+                            <option value="Travel">🚌 Travel</option>
+                            <option value="Education">📚 Education</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Entertainment">🎮 Entertainment</option>
+                            <option value="Bills">🧾 Bills</option>
+                            <option value="Health">💊 Health</option>
+                            <option value="Other">📦 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="date">Expense date</label>
+                        <input id="date" type="date" required>
+                    </div>
+
+                    <button class="primary-btn submit-btn" type="submit">
+                        + Add expense
+                    </button>
+                    <p id="form-message" class="small-message" aria-live="polite"></p>
+                </form>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Spending overview</h2>
+                        <p class="muted">Where your money goes this month.</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="expense-chart" aria-label="Spending by category"></canvas>
+                    <p id="chart-empty" class="chart-empty">
+                        Add expenses to see your spending chart.
+                    </p>
+                </div>
+                <div id="category-summary" class="category-summary"></div>
+            </article>
+        </section>
+
+        <section class="panel transactions">
+            <div class="transactions-heading">
+                <div>
+                    <h2>Transaction history</h2>
+                    <p class="muted">Review and manage your recorded expenses.</p>
+                </div>
+                <div class="filters">
+                    <select id="filter-month" aria-label="Filter by month">
+                        <option value="all">All months</option>
+                    </select>
+                    <select id="filter-category" aria-label="Filter by category">
+                        <option value="all">All categories</option>
+                        <option>Food</option>
+                        <option>Travel</option>
+                        <option>Education</option>
+                        <option>Shopping</option>
+                        <option>Entertainment</option>
+                        <option>Bills</option>
+                        <option>Health</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Expense</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expense-list"></tbody>
+                </table>
+            </div>
+            <p id="empty-state" class="empty-state">
+                No transactions yet. Add your first expense!
+            </p>
+            <div class="table-footer">
+                <span id="visible-count">0 transactions</span>
+                <strong id="visible-total">₹0.00</strong>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="#" class="brand">Spend<span>Wise</span></a>
+            <p>Built with HTML, CSS and JavaScript.</p>
+            <p>Your financial data stays in this browser.</p>
+        </footer>
+    </main>
+</body>
+</html>
